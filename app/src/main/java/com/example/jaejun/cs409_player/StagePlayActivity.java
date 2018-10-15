@@ -1,5 +1,7 @@
 package com.example.jaejun.cs409_player;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,16 +25,18 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 /**
- * Created by jaejun on 2018-10-04.
+ * Created by jaejun on 2018-10-11.
  */
 
-public class DevActivity extends AppCompatActivity{
+public class StagePlayActivity extends AppCompatActivity{
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
-    private DevComponentListener componentListener;
+    private StageComponentListener componentListener;
+    private String mode;
+    private long initTime;
 
     private static long playbackPosition;
     private static int currentWindow;
@@ -43,7 +47,26 @@ public class DevActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        componentListener = new DevComponentListener();
+        Intent intent = new Intent(this.getIntent());
+        mode = intent.getStringExtra("mode");
+        final Activity thisActivity = this;
+
+        Callback startCallback = null;
+        if (mode.equals("calc")) {
+            startCallback = new Callback() {
+                @Override
+                public void callback(long startTime) {
+                    releasePlayer();
+                    Intent intent = new Intent();
+                    intent.putExtra("initTime", initTime);
+                    intent.putExtra("startTime", startTime);
+                    thisActivity.setResult(0, intent);
+                    thisActivity.finish();
+                }
+            };
+        }
+
+        componentListener = new StageComponentListener(startCallback);
         playerView = findViewById(R.id.video_view);
     }
 
@@ -81,6 +104,7 @@ public class DevActivity extends AppCompatActivity{
     }
 
     private void initializePlayer() {
+        initTime = Utils.currentTimeNanos();
         if (player == null) {
             TrackSelection.Factory adaptiveTrackSelectionFactory =
                     new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
@@ -93,8 +117,9 @@ public class DevActivity extends AppCompatActivity{
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        MediaSource mediaSource = buildMediaSource(Uri.parse(getString(R.string.media_url_dev)));
-        player.prepare(mediaSource, false, false);
+        MediaSource mediaSource = buildMediaSource(Uri.parse(getString(R.string.media_url_stage)));
+
+        player.prepare(mediaSource, true, true);
     }
 
     private void releasePlayer() {

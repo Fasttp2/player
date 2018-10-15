@@ -17,8 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StageActivity"></activity>
-        <activity android:name=".DevActivity"></activity>
+
+        <activity android:name=".DevPlayActivity"></activity>
+        <activity android:name=".DevCalcActivity"></activity>
+        <activity android:name=".StagePlayActivity"></activity>
+        <activity android:name=".StageCalcActivity"></activity>
     </application>
 
 </manifest>

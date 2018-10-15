@@ -11,8 +11,8 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Intent devIntent = null;
-    private Intent stageIntent = null;
+    private Intent devPlayIntent = null, devCalcIntent = null;
+    private Intent stagePlayIntent = null, stageCalcIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +21,10 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermission();
 
-        devIntent = new Intent(this, DevActivity.class);
-        stageIntent = new Intent(this, StageActivity.class);
+        devPlayIntent = new Intent(this, DevPlayActivity.class);
+        devCalcIntent = new Intent(this, DevCalcActivity.class);
+        stagePlayIntent = new Intent(this, StagePlayActivity.class);
+        stageCalcIntent = new Intent(this, StageCalcActivity.class);
     }
 
     private void checkPermission() {
@@ -35,11 +37,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void click(View view) {
         switch(view.getId()){
-            case R.id.devButton:
-                startActivity(devIntent);
+            case R.id.devPlay:
+                devPlayIntent.putExtra("mode", "play");
+                startActivity(devPlayIntent);
                 break;
-            case R.id.stageButton:
-                startActivity(stageIntent);
+            case R.id.devCalc:
+                startActivity(devCalcIntent);
+                break;
+            case R.id.stagePlay:
+                stagePlayIntent.putExtra("mode", "play");
+                startActivity(stagePlayIntent);
+                break;
+            case R.id.stageCalc:
+                startActivity(stageCalcIntent);
                 break;
             default:
                 break;

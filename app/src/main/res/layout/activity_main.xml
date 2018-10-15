@@ -2,26 +2,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/devButton"
-        android:text="DEV"
-        android:textSize="40sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:onClick="click"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp">
 
-    <TextView
-        android:id="@+id/stageButton"
-        android:text="STAGE"
-        android:textSize="40sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        <TextView
+            android:text="DEV"
+            android:textSize="@dimen/modeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" />
+        <TextView
+            android:text="STAGE"
+            android:textSize="@dimen/modeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:onClick="click" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:onClick="click" />
+        android:orientation="vertical"
+        android:layout_marginHorizontal="20dp">
+
+        <TextView
+            android:text="PLAY"
+            android:id="@+id/devPlay"
+            android:onClick="click"
+            android:textSize="@dimen/usageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:text="Start-up Time"
+            android:id="@+id/devCalc"
+            android:onClick="click"
+            android:textSize="@dimen/usageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <TextView
+            android:text="PLAY"
+            android:id="@+id/stagePlay"
+            android:onClick="click"
+            android:textSize="@dimen/usageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"/>
+        <TextView
+            android:text="Start-up Time"
+            android:id="@+id/stageCalc"
+            android:onClick="click"
+            android:textSize="@dimen/usageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -15,6 +15,12 @@ import com.google.android.exoplayer2.video.VideoRendererEventListener;
 public class DevComponentListener extends Player.DefaultEventListener
         implements VideoRendererEventListener {
 
+    private Callback startCallback = null;
+
+    public DevComponentListener(Callback startCallback){
+        this.startCallback = startCallback;
+    }
+
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         super.onPlayerStateChanged(playWhenReady, playbackState);
@@ -22,36 +28,32 @@ public class DevComponentListener extends Player.DefaultEventListener
 
     @Override
     public void onVideoEnabled(DecoderCounters counters) {
-
     }
 
     @Override
     public void onVideoDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
-
     }
 
     @Override
     public void onVideoInputFormatChanged(Format format) {
-
     }
 
     @Override
     public void onDroppedFrames(int count, long elapsedMs) {
-
     }
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-
     }
 
     @Override
     public void onRenderedFirstFrame(Surface surface) {
+        long startTime = Utils.currentTimeNanos();
 
+        if (startCallback != null) { startCallback.callback(startTime); }
     }
 
     @Override
     public void onVideoDisabled(DecoderCounters counters) {
-
     }
 }
