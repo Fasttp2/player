@@ -117,7 +117,7 @@ public class DevPlayActivity extends AppCompatActivity{
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        MediaSource mediaSource = buildMediaSource(Uri.parse(getString(R.string.media_url_dev)));
+        MediaSource mediaSource = buildMediaSource(Uri.parse(getString(R.string.media_url_experiment)));
 
         player.prepare(mediaSource, true, true);
     }
