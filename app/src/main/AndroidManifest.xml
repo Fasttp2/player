@@ -3,6 +3,7 @@
     package="com.example.jaejun.cs409_player">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".MainActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,6 +25,10 @@
         <activity android:name=".DevCalcActivity"></activity>
         <activity android:name=".StagePlayActivity"></activity>
         <activity android:name=".StageCalcActivity"></activity>
+        <activity android:name=".ExperimentActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity android:name=".ExperimentPlayActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

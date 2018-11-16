@@ -3,6 +3,7 @@ package com.example.jaejun.cs409_player;
 import android.util.Log;
 import android.view.Surface;
 
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
@@ -15,12 +16,11 @@ import com.google.android.exoplayer2.video.VideoRendererEventListener;
 public class StageComponentListener extends Player.DefaultEventListener
         implements VideoRendererEventListener {
 
-    private Callback startCallback = null;
+    private StartCallback startCallback = null;
 
-    public StageComponentListener(Callback startCallback){
+    public StageComponentListener(StartCallback startCallback){
         this.startCallback = startCallback;
     }
-
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         super.onPlayerStateChanged(playWhenReady, playbackState);

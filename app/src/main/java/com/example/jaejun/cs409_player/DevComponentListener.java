@@ -1,5 +1,6 @@
 package com.example.jaejun.cs409_player;
 
+import android.util.Log;
 import android.view.Surface;
 
 import com.google.android.exoplayer2.Format;
@@ -15,9 +16,9 @@ import com.google.android.exoplayer2.video.VideoRendererEventListener;
 public class DevComponentListener extends Player.DefaultEventListener
         implements VideoRendererEventListener {
 
-    private Callback startCallback = null;
+    private StartCallback startCallback = null;
 
-    public DevComponentListener(Callback startCallback){
+    public DevComponentListener(StartCallback startCallback){
         this.startCallback = startCallback;
     }
 

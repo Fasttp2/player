@@ -11,6 +11,7 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.dash.DashChunkSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
@@ -21,8 +22,11 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by jaejun on 2018-10-11.
@@ -51,9 +55,9 @@ public class StagePlayActivity extends AppCompatActivity{
         mode = intent.getStringExtra("mode");
         final Activity thisActivity = this;
 
-        Callback startCallback = null;
+        StartCallback startCallback = null;
         if (mode.equals("calc")) {
-            startCallback = new Callback() {
+            startCallback = new StartCallback() {
                 @Override
                 public void callback(long startTime) {
                     releasePlayer();
@@ -117,7 +121,7 @@ public class StagePlayActivity extends AppCompatActivity{
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        MediaSource mediaSource = buildMediaSource(Uri.parse(getString(R.string.media_url_stage)));
+        MediaSource mediaSource = buildMediaSource(Uri.parse(getString(R.string.media_url_experiment3)));
 
         player.prepare(mediaSource, true, true);
     }
@@ -135,9 +139,11 @@ public class StagePlayActivity extends AppCompatActivity{
     }
 
     private MediaSource buildMediaSource(Uri uri) {
-        DataSource.Factory manifestDataSourceFactory = new DefaultHttpDataSourceFactory("ua");
+        OkHttpClient client = new OkHttpClient.Builder().readTimeout(Integer.MAX_VALUE, TimeUnit.MILLISECONDS).build();
+
+        DataSource.Factory manifestDataSourceFactory = new OkHttpDataSourceFactory(client,"ua", null);
         DashChunkSource.Factory dashChunkSourceFactory = new DefaultDashChunkSource.Factory(
-                new DefaultHttpDataSourceFactory("ua", BANDWIDTH_METER));
+                new OkHttpDataSourceFactory(client, "ua", BANDWIDTH_METER));
         return new DashMediaSource.Factory(dashChunkSourceFactory, manifestDataSourceFactory)
                 .createMediaSource(uri);
     }

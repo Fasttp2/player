@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Intent devPlayIntent = null, devCalcIntent = null;
     private Intent stagePlayIntent = null, stageCalcIntent = null;
+    private Intent experimentIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +26,26 @@ public class MainActivity extends AppCompatActivity {
         devCalcIntent = new Intent(this, DevCalcActivity.class);
         stagePlayIntent = new Intent(this, StagePlayActivity.class);
         stageCalcIntent = new Intent(this, StageCalcActivity.class);
+        experimentIntent = new Intent(this, ExperimentActivity.class);
     }
 
     private void checkPermission() {
-        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
-                == PackageManager.PERMISSION_GRANTED)){
+        boolean internetPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+                == PackageManager.PERMISSION_GRANTED;
+        boolean writePermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+
+        if (!internetPermission && !writePermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
+        }
+        else if (!internetPermission) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.INTERNET}, 123);
+        }
+        else if (!writePermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
         }
     }
 
@@ -50,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.stageCalc:
                 startActivity(stageCalcIntent);
+                break;
+            case R.id.experiment:
+                startActivity(experimentIntent);
                 break;
             default:
                 break;

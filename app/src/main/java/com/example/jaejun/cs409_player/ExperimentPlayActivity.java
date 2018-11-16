@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -25,53 +27,76 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 
 /**
- * Created by jaejun on 2018-10-11.
+ * Created by jaejun on 2018-11-12.
  */
 
-public class DevPlayActivity extends AppCompatActivity{
+public class ExperimentPlayActivity extends AppCompatActivity {
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
-    private DevComponentListener componentListener;
-    private String mode;
-    private long initTime;
+    private TextView touchBlockView;
+    private ExperimentComponentListener componentListener;
 
     private static long playbackPosition;
     private static int currentWindow;
     private static boolean playWhenReady = true;
+    private static int STREAMING_URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_player);
+        setContentView(R.layout.activity_player_experiment);
 
-        Intent intent = new Intent(this.getIntent());
-        mode = intent.getStringExtra("mode");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        Intent intent = getIntent();
+        int segmentType = intent.getExtras().getInt("segmentType");
+
+        switch(segmentType) {
+            case 0:
+                STREAMING_URL = R.string.media_url_experiment1;
+                break;
+            case 1:
+                STREAMING_URL = R.string.media_url_experiment2;
+                break;
+            case 2:
+                STREAMING_URL = R.string.media_url_experiment3;
+                break;
+            case 3:
+                STREAMING_URL = R.string.media_url_experiment4;
+                break;
+        }
+
         final Activity thisActivity = this;
+        BufferingCallback endCallback = new BufferingCallback(){
+            int cnt =0;
+            public void callback(String results){
+                releasePlayer();
 
-        StartCallback startCallback = null;
-        if (mode.equals("calc")) {
-            startCallback = new StartCallback() {
-                @Override
-                public void callback(long startTime) {
-                    releasePlayer();
-                    Intent intent = new Intent();
-                    intent.putExtra("initTime", initTime);
-                    intent.putExtra("startTime", startTime);
-                    thisActivity.setResult(0, intent);
+                Utils.writeExperimentData(results);
+                if (++cnt < 2) { initializePlayer(); }
+                else {
+                    thisActivity.setResult(5, new Intent());
                     thisActivity.finish();
                 }
-            };
-        }
-        componentListener = new DevComponentListener(startCallback);
+            }
+        };
+        componentListener = new ExperimentComponentListener(endCallback);
         playerView = findViewById(R.id.video_view);
+        touchBlockView = (TextView)findViewById(R.id.touchBlockView);
+        /*touchBlockView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event){
+                return true;
+            }
+        });*/
     }
 
     @Override
@@ -108,8 +133,9 @@ public class DevPlayActivity extends AppCompatActivity{
     }
 
     private void initializePlayer() {
-        initTime = Utils.currentTimeNanos();
         if (player == null) {
+            componentListener.refresh();
+
             TrackSelection.Factory adaptiveTrackSelectionFactory =
                     new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
 
